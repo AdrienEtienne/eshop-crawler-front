@@ -18,7 +18,30 @@ export interface SetShopsAction {
   };
 }
 
-export type StoreAction = SetActionStatusAction | SetShopsAction;
+export interface SetSearchGamesFilterAction {
+  type: constants.SET_GAME_FILTER_SEARCH;
+  payload: {
+    search: string;
+  };
+}
+
+export interface SetCountriesGamesFilterAction {
+  type: constants.SET_GAME_FILTER_COUNTRIES;
+  payload: {
+    countries: string[];
+  };
+}
+
+export interface ToggleOnSaleGamesFilterAction {
+  type: constants.TOGGLE_GAME_FILTER_ON_SALE;
+}
+
+export type StoreAction =
+  | SetActionStatusAction
+  | SetShopsAction
+  | SetSearchGamesFilterAction
+  | SetCountriesGamesFilterAction
+  | ToggleOnSaleGamesFilterAction;
 
 export function setActionStatus(
   name: ActionName,
@@ -37,6 +60,28 @@ export function setShopsAction(shops: Shop[]): SetShopsAction {
   return {
     type: constants.SET_SHOPS,
     payload: { shops }
+  };
+}
+
+export function setSearchGamesFilter(search = ""): SetSearchGamesFilterAction {
+  return {
+    type: constants.SET_GAME_FILTER_SEARCH,
+    payload: { search }
+  };
+}
+
+export function setCountriesGamesFilter(
+  countries: string[]
+): SetCountriesGamesFilterAction {
+  return {
+    type: constants.SET_GAME_FILTER_COUNTRIES,
+    payload: { countries }
+  };
+}
+
+export function toggleOnSaleGamesFilter(): ToggleOnSaleGamesFilterAction {
+  return {
+    type: constants.TOGGLE_GAME_FILTER_ON_SALE
   };
 }
 

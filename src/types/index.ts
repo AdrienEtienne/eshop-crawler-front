@@ -2,6 +2,11 @@ import { Region } from "nintendo-switch-eshop";
 
 export interface StoreState {
   actions: ActionStatus[];
+  gamesFilter: {
+    countries: string[];
+    onSale: boolean;
+    search: string;
+  };
   shops: Shop[];
 }
 
