@@ -2,15 +2,17 @@ import {
   applyMiddleware,
   compose,
   createStore,
-  StoreEnhancerStoreCreator
+  StoreEnhancerStoreCreator,
+  Dispatch as ReduxDispatch
 } from "redux";
 import "redux-devtools-extension";
 import thunk, { ThunkAction, ThunkMiddleware } from "redux-thunk";
 import { reducer, initialState } from "./reducers";
 import { StoreState } from "./types";
-import { StoreAction } from "./actions";
+import { StoreAction, fetchShops } from "./actions";
 
-export type ThunkResult<R> = ThunkAction<R, StoreState, void, StoreAction>;
+export type ThunkResult<R> = ThunkAction<R, StoreState, undefined, StoreAction>;
+export type Dispatch = ReduxDispatch<StoreAction>;
 
 const enhancers = [];
 export const middlewares = [thunk as ThunkMiddleware<StoreState, StoreAction>];
@@ -35,3 +37,5 @@ export const composedEnhancers = compose<
 );
 
 export const store = createStore(reducer, initialState, composedEnhancers);
+
+store.dispatch((fetchShops() as unknown) as StoreAction);
