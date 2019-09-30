@@ -1,15 +1,20 @@
 import React from "react";
-import { Row, Col } from "reactstrap";
+import { Row, Col, Container } from "reactstrap";
 import { GameFilterContainer } from "./containers/GameFilter";
+import { GamesContainer } from "./containers/Games";
 
 const App = () => {
   return (
-    <Row>
-      <Col md={4} lg={3} className="m-3">
-        <GameFilterContainer />
-      </Col>
-      <Col className="m-3">games</Col>
-    </Row>
+    <Container className="my-3">
+      <Row>
+        <Col md={4} lg={3}>
+          <GameFilterContainer />
+        </Col>
+        <Col>
+          <GamesContainer />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
