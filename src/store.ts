@@ -9,13 +9,17 @@ import "redux-devtools-extension";
 import thunk, { ThunkAction, ThunkMiddleware } from "redux-thunk";
 import { reducer, initialState } from "./reducers";
 import { StoreState } from "./types";
-import { StoreAction, fetchShops } from "./actions";
+import { StoreAction, fetchShops, fetchGames } from "./actions";
+import { resetSearchGamesMiddleware } from "./middlewares";
 
 export type ThunkResult<R> = ThunkAction<R, StoreState, undefined, StoreAction>;
 export type Dispatch = ReduxDispatch<StoreAction>;
 
 const enhancers = [];
-export const middlewares = [thunk as ThunkMiddleware<StoreState, StoreAction>];
+export const middlewares = [
+  thunk as ThunkMiddleware<StoreState, StoreAction>,
+  resetSearchGamesMiddleware
+];
 
 if (process.env.NODE_ENV === "development") {
   const devToolsExtension =
@@ -39,3 +43,4 @@ export const composedEnhancers = compose<
 export const store = createStore(reducer, initialState, composedEnhancers);
 
 store.dispatch((fetchShops() as unknown) as StoreAction);
+store.dispatch((fetchGames() as unknown) as StoreAction);

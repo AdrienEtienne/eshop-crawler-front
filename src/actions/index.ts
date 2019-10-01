@@ -1,7 +1,9 @@
 import * as constants from "../constants";
-import { ActionName, Shop } from "../types";
+import { ActionName, Shop, Game } from "../types";
 import { ThunkResult } from "../store";
-import { getShops } from "../api";
+import { getShops, getGames } from "../api";
+import { MetaPagination } from "../api/request";
+import { isActionLoading } from "../selectors.ts";
 
 export interface SetActionStatusAction {
   type: constants.SET_ACTION_STATUS;
@@ -36,12 +38,26 @@ export interface ToggleOnSaleGamesFilterAction {
   type: constants.TOGGLE_GAME_FILTER_ON_SALE;
 }
 
+export interface AddGamesAction {
+  type: constants.ADD_GAMES;
+  payload: {
+    games: Game[];
+    pagination: MetaPagination;
+  };
+}
+
+export interface ResetGamesAction {
+  type: constants.RESET_GAMES;
+}
+
 export type StoreAction =
   | SetActionStatusAction
   | SetShopsAction
   | SetSearchGamesFilterAction
   | SetCountriesGamesFilterAction
-  | ToggleOnSaleGamesFilterAction;
+  | ToggleOnSaleGamesFilterAction
+  | AddGamesAction
+  | ResetGamesAction;
 
 export function setActionStatus(
   name: ActionName,
@@ -85,6 +101,22 @@ export function toggleOnSaleGamesFilter(): ToggleOnSaleGamesFilterAction {
   };
 }
 
+export function addGames(
+  games: Game[],
+  pagination: MetaPagination
+): AddGamesAction {
+  return {
+    type: constants.ADD_GAMES,
+    payload: { games, pagination }
+  };
+}
+
+export function resetGames(): ResetGamesAction {
+  return {
+    type: constants.RESET_GAMES
+  };
+}
+
 export function fetchShops(): ThunkResult<Promise<void>> {
   return async dispatch => {
     dispatch(setActionStatus("fetch_shops", true));
@@ -94,6 +126,39 @@ export function fetchShops(): ThunkResult<Promise<void>> {
       dispatch(setActionStatus("fetch_shops", false));
     } catch (error) {
       dispatch(setActionStatus("fetch_shops", false));
+    }
+  };
+}
+
+export function fetchGames(
+  options: {
+    reset?: boolean;
+  } = {}
+): ThunkResult<Promise<void>> {
+  return async (dispatch, getState) => {
+    let state = getState();
+    if (isActionLoading(state.actions, "fetch_games")) {
+      return;
+    }
+
+    dispatch(setActionStatus("fetch_games", true));
+    if (options.reset) {
+      dispatch(resetGames());
+    }
+    try {
+      const state = getState();
+      const body = await getGames({
+        countries: state.gamesFilter.countries,
+        page: state.gamesPage.current + 1,
+        sales: state.gamesFilter.onSale,
+        search: state.gamesFilter.search
+      });
+      dispatch(
+        addGames(body.result, body!.meta!.pagination || state.gamesPage)
+      );
+      dispatch(setActionStatus("fetch_games", false));
+    } catch (error) {
+      dispatch(setActionStatus("fetch_games", false));
     }
   };
 }

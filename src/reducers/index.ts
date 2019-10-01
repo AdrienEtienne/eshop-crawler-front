@@ -5,17 +5,25 @@ import {
   SET_ACTION_STATUS,
   SET_GAME_FILTER_SEARCH,
   TOGGLE_GAME_FILTER_ON_SALE,
-  SET_GAME_FILTER_COUNTRIES
+  SET_GAME_FILTER_COUNTRIES,
+  ADD_GAMES,
+  RESET_GAMES
 } from "../constants";
 import { Reducer } from "redux";
 import { cloneDeep, orderBy } from "lodash";
 
 export const initialState: StoreState = {
   actions: [],
+  games: [],
   gamesFilter: {
     countries: ["FR", "NZ"],
-    onSale: false,
+    onSale: true,
     search: ""
+  },
+  gamesPage: {
+    current: 0,
+    items: 0,
+    itemsTotal: 0
   },
   shops: []
 };
@@ -62,6 +70,22 @@ export const reducer: Reducer<StoreState, StoreAction> = (
         gamesFilter: {
           ...state.gamesFilter,
           onSale: !state.gamesFilter.onSale
+        }
+      };
+    case ADD_GAMES:
+      return {
+        ...state,
+        games: [...state.games, ...action.payload.games],
+        gamesPage: action.payload.pagination
+      };
+    case RESET_GAMES:
+      return {
+        ...state,
+        games: [],
+        gamesPage: {
+          current: 0,
+          items: 0,
+          itemsTotal: 0
         }
       };
   }
