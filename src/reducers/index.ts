@@ -16,7 +16,7 @@ export const initialState: StoreState = {
   actions: [],
   games: [],
   gamesFilter: {
-    countries: ["FR"],
+    countries: ["FR", "NZ"],
     onSale: true,
     search: ""
   },
