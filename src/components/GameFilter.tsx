@@ -9,16 +9,20 @@ export default function GameFilter({
   countries,
   search,
   shops,
+  onSale,
   isLoading,
   onSearchChange,
-  onCountriesChange
+  onCountriesChange,
+  onSalesChange
 }: {
   countries: string[];
   search: string;
   shops: Shop[];
+  onSale: boolean;
   isLoading: boolean;
   onSearchChange: (value: string) => void;
   onCountriesChange: (values: string[]) => void;
+  onSalesChange: () => void;
 }) {
   if (isLoading) {
     return (
@@ -69,7 +73,13 @@ export default function GameFilter({
 
       <FormGroup check className="mb-3">
         <Label check>
-          <Input type="checkbox" id="checkbox-salse" /> On Sales
+          <Input
+            type="checkbox"
+            id="checkbox-salse"
+            checked={onSale}
+            onChange={onSalesChange}
+          />{" "}
+          On Sales
         </Label>
       </FormGroup>
     </div>

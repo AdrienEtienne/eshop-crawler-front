@@ -3,6 +3,7 @@ import { ActionName, Shop, Game } from "../types";
 import { ThunkResult } from "../store";
 import { getShops, getGames } from "../api";
 import { MetaPagination } from "../api/request";
+import { isActionLoading } from "../selectors.ts";
 
 export interface SetActionStatusAction {
   type: constants.SET_ACTION_STATUS;
@@ -135,6 +136,11 @@ export function fetchGames(
   } = {}
 ): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
+    let state = getState();
+    if (isActionLoading(state.actions, "fetch_games")) {
+      return;
+    }
+
     dispatch(setActionStatus("fetch_games", true));
     if (options.reset) {
       dispatch(resetGames());
@@ -143,7 +149,7 @@ export function fetchGames(
       const state = getState();
       const body = await getGames({
         countries: state.gamesFilter.countries,
-        page: state.gamesPage.current++,
+        page: state.gamesPage.current + 1,
         sales: state.gamesFilter.onSale,
         search: state.gamesFilter.search
       });
