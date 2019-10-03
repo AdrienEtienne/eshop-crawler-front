@@ -35,11 +35,11 @@ class Games extends React.Component<Props> {
     return (
       <InfiniteScroll
         pageStart={1}
-        loadMore={(...args) => {
-          console.log(...args);
+        loadMore={() => {
           this.props.fetchGames();
         }}
         hasMore={this.props.hasMore && !this.props.isLoading}
+        threshold={500}
       >
         <Masonry>
           {this.props.games.map((game, key) => (
