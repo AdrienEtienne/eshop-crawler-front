@@ -39,7 +39,7 @@ class Games extends React.Component<Props> {
           this.props.fetchGames();
         }}
         hasMore={this.props.hasMore && !this.props.isLoading}
-        threshold={500}
+        threshold={800}
       >
         <Masonry>
           {this.props.games.map((game, key) => (
