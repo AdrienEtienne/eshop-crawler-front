@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Eshop crawler web App
+
+Available on http://switch-prices.herokuapp.com/.
+
 ## Available Scripts
 
 In the project directory, you can run:
